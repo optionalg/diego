@@ -7,7 +7,9 @@
 
 (defn parse-line [line]
   (let [[_ ip timestamp] (s/split line #"\s+")]
-    (if-not (nil? ip)
+    (if (and (not (nil? ip))
+             (re-matches #"\A[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\z" ip)
+             (re-matches #"\A[0-9]+\z" timestamp))
       [ip (read-string timestamp)]
       [nil nil])))
 
@@ -19,7 +21,8 @@
 
 (defn store! [line]
   (let [[ip timestamp] (parse-line line)]
-    (swap! ips-by-hour store-location ip timestamp)))
+    (if-not (nil? ip)
+      (swap! ips-by-hour store-location ip timestamp))))
 
 (defn ip->point [db ip]
   (let [location (geoip/lookup-ip db ip)]
