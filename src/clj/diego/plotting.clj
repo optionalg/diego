@@ -17,7 +17,7 @@
 (defn store-location [locations ip timestamp]
   (update-in locations [(beginning-of-hour timestamp)] cset/union #{ip}))
 
-(defn store [line]
+(defn store! [line]
   (let [[ip timestamp] (parse-line line)]
     (swap! ips-by-hour store-location ip timestamp)))
 

@@ -34,7 +34,7 @@
       (is (= 24 (count (keys stored-locations)))))))
 
 (deftest store-mutates-state
-  (store "foo 127.0.0.1 1353102243")
+  (store! "foo 127.0.0.1 1353102243")
   (is (= #{"127.0.0.1"} (locations))))
 
 (deftest can-generate-geo-json
