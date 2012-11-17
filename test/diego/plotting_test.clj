@@ -38,11 +38,11 @@
   (is (= #{"127.0.0.1"} (locations))))
 
 (deftest can-generate-geo-json
-  (let [db (geoip/build-database "GeoLiteCity.dat")]
-    (testing "ip->point"
-      (let [point (ip->point db "98.101.166.2")]
-        (is (= {:type "Feature"
-                :properties {}
-                :geometry {:type "Point"
-                           :coordinates [(float -78.8326) (float 35.860107)]}}
-               point))))))
+  (geoip/build-database! "GeoLiteCity.dat")
+  (testing "ip->point"
+    (let [point (ip->point @geoip/db "98.101.166.2")]
+      (is (= {:type "Feature"
+              :properties {}
+              :geometry {:type "Point"
+                         :coordinates [(float -78.8326) (float 35.860107)]}}
+             point)))))

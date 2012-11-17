@@ -1,7 +1,8 @@
 (ns diego.http
   (:require [compojure.core :as compojure]
             [compojure.route :as route]
-            [aleph.http :as aleph]))
+            [aleph.http :as aleph]
+            [diego.plotting :as plotting]))
 
 (defn index []
   {:status 200

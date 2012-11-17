@@ -1,8 +1,10 @@
 (ns diego.geoip
   (:import [com.maxmind.geoip LookupService]))
 
-(defn build-database [file-path]
-  (LookupService. file-path))
+(def db (atom :not-initialized))
+
+(defn build-database! [file-path]
+  (swap! db (fn [_] (LookupService. file-path))))
 
 (defn lookup-ip [db ip-address]
   (let [location (.getLocation db ip-address)]
