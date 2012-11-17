@@ -1,6 +1,7 @@
 (ns diego.plotting
   (:require [clojure.string :as s]
-            [clojure.set :as cset]))
+            [clojure.set :as cset]
+            [diego.geoip :as geoip]))
 
 (def locations-by-hour (atom {}))
 
@@ -19,3 +20,14 @@
 
 (defn locations []
   (reduce cset/union (vals @locations-by-hour)))
+
+(defn ip->point [db ip]
+  (let [location (geoip/lookup-ip db ip)]
+    {:type "Feature"
+     :properties {}
+     :geometry {:type "Point"
+                :coordinates [(:longitude location) (:latitude location)]}}))
+
+(defn ips->geo-json [db ips]
+  {:type "FeatureCollection"
+   :features (map ip->point db ips)})

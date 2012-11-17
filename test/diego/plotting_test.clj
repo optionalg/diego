@@ -1,5 +1,6 @@
 (ns diego.plotting-test
-  (:use clojure.test diego.plotting))
+  (:use clojure.test diego.plotting)
+  (:require [diego.geoip :as geoip]))
 
 (deftest can-parse-line
   (testing "parses key, ip, and timestamp"
@@ -35,3 +36,14 @@
 (deftest store-mutates-state
   (store "1" 1353102243)
   (is (= #{"1"} (locations))))
+
+
+(deftest can-generate-geo-json
+  (let [db (geoip/build-database "GeoLiteCity.dat")]
+    (testing "ip->point"
+      (let [point (ip->point db "98.101.166.2")]
+        (is (= {:type "Feature"
+                :properties {}
+                :geometry {:type "Point"
+                           :coordinates [(float -78.8326) (float 35.860107)]}}
+               point))))))
