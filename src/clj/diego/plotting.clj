@@ -3,11 +3,13 @@
             [clojure.set :as cset]
             [diego.geoip :as geoip]))
 
-(def locations-by-hour (atom {}))
+(def ips-by-hour (atom {}))
 
 (defn parse-line [line]
   (let [[_ ip timestamp] (s/split line #"\s+")]
-    [ip timestamp]))
+    (if-not (nil? ip)
+      [ip (read-string timestamp)]
+      [nil nil])))
 
 (defn beginning-of-hour [timestamp]
   (- timestamp (mod timestamp 3600)))
@@ -15,11 +17,12 @@
 (defn store-location [locations ip timestamp]
   (update-in locations [(beginning-of-hour timestamp)] cset/union #{ip}))
 
-(defn store [ip timestamp]
-  (swap! locations-by-hour store-location ip timestamp))
+(defn store [line]
+  (let [[ip timestamp] (parse-line line)]
+    (swap! ips-by-hour store-location ip timestamp)))
 
 (defn locations []
-  (reduce cset/union (vals @locations-by-hour)))
+  (reduce cset/union (vals @ips-by-hour)))
 
 (defn ip->point [db ip]
   (let [location (geoip/lookup-ip db ip)]

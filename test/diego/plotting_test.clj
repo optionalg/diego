@@ -6,11 +6,11 @@
   (testing "parses key, ip, and timestamp"
     (let [[ip timestamp] (parse-line "the.key 127.0.0.1 1353073467")]
       (is (= "127.0.0.1" ip))
-      (is (= "1353073467" timestamp))))
+      (is (= 1353073467 timestamp))))
   (testing "parses with multiple spaces"
     (let [[ip timestamp] (parse-line "the.key   127.0.0.1     1353073467")]
       (is (= "127.0.0.1" ip))
-      (is (= "1353073467" timestamp))))
+      (is (= 1353073467 timestamp))))
   (testing "empty lines result in nils"
     (let [[ip timestamp] (parse-line "")]
       (is (= nil ip))
@@ -34,9 +34,8 @@
       (is (= 24 (count (keys stored-locations)))))))
 
 (deftest store-mutates-state
-  (store "1" 1353102243)
-  (is (= #{"1"} (locations))))
-
+  (store "foo 127.0.0.1 1353102243")
+  (is (= #{"127.0.0.1"} (locations))))
 
 (deftest can-generate-geo-json
   (let [db (geoip/build-database "GeoLiteCity.dat")]
