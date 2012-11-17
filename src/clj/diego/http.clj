@@ -2,6 +2,7 @@
   (:require [compojure.core :as compojure]
             [compojure.route :as route]
             [aleph.http :as aleph]
+            [aleph.formats :as formats]
             [diego.plotting :as plotting]))
 
 (defn index []
@@ -23,20 +24,7 @@
 (defn points []
   {:status 200
    :headers {"Content-Type" "text/json"}
-   :body
-  "{ \"type\": \"FeatureCollection\",
-     \"features\": [
-       { \"type\": \"Feature\",
-         \"geometry\": {\"type\": \"Point\", \"coordinates\": [102.0, 0.5]},
-         \"properties\": {\"prop0\": \"value0\"}
-       },
-       { \"type\": \"Feature\",
-         \"geometry\": {\"type\": \"Point\", \"coordinates\": [-78.8326, 35.860107]},
-         \"properties\": {\"prop0\": \"value1\"}
-       }
-     ]
-   }
-  "})
+   :body (formats/encode-json->string (plotting/geo-json))})
 
 (compojure/defroutes main-routes
   (compojure/GET "/" [] (index))

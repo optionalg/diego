@@ -21,9 +21,6 @@
   (let [[ip timestamp] (parse-line line)]
     (swap! ips-by-hour store-location ip timestamp)))
 
-(defn locations []
-  (reduce cset/union (vals @ips-by-hour)))
-
 (defn ip->point [db ip]
   (let [location (geoip/lookup-ip db ip)]
     {:type "Feature"
@@ -33,4 +30,7 @@
 
 (defn ips->geo-json [db ips]
   {:type "FeatureCollection"
-   :features (map ip->point db ips)})
+   :features (map (partial ip->point db) ips)})
+
+(defn geo-json []
+  (ips->geo-json @geoip/db (reduce cset/union (vals @ips-by-hour))))

@@ -45,4 +45,8 @@
               :properties {}
               :geometry {:type "Point"
                          :coordinates [(float -78.8326) (float 35.860107)]}}
-             point)))))
+             point))))
+  (testing "ips->point"
+    (let [points (ips->point @geoip/db #{"98.101.166.2"})]
+      (is (= "FeatureCollection" (:type points)))
+      (is (any? (:features points))))))
