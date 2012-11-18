@@ -60,7 +60,7 @@
               :geometry {:type "Point"
                          :coordinates [(float -78.8326) (float 35.860107)]}}
              point))))
-  (testing "ips->point"
-    (let [points (ips->point @geoip/db #{"98.101.166.2"})]
+  (testing "ips->geo-json"
+    (let [points (ips->geo-json @geoip/db #{"98.101.166.2"})]
       (is (= "FeatureCollection" (:type points)))
-      (is (any? (:features points))))))
+      (is (not (empty? (:features points)))))))

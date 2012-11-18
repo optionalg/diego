@@ -21,10 +21,16 @@
   (update-in locations [(beginning-of-hour timestamp)] cset/union #{ip}))
 
 (defn store! [line]
-  (let [[ip timestamp] (parse-line line)]
-    (if (nil? ip)
-      (log/debug (str "dropping invalid input " line)
-      (swap! ips-by-hour store-location ip timestamp)))))
+  (try
+    (log/info "storing line")
+    (let [[ip timestamp] (parse-line line)]
+      (log/info (str "adding ip: " ip))
+      (if (nil? ip)
+        (log/warn "dropping invalid input " line)
+        (do
+          (swap! ips-by-hour store-location ip timestamp)
+          (log/info "added ip: " ip))))
+    (catch Exception e (log/error "caught execption " e))))
 
 (defn ip->point [db ip]
   (let [location (geoip/lookup-ip db ip)]
