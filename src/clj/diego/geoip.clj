@@ -9,6 +9,9 @@
   (swap! db (fn [_] (LookupService. file-path))))
 
 (defn lookup-ip [db ip-address]
-  (let [location (.getLocation db ip-address)]
-    {:latitude (.latitude location)
-     :longitude (.longitude location)}))
+  (if (= db :not-initialized)
+    (do (log/warn "BUG! uninitialized GeoIP DB")
+        {:latitude 0 :longitude 0})
+    (let [location (.getLocation db ip-address)]
+      {:latitude (.latitude location)
+       :longitude (.longitude location)})))
