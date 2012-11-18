@@ -2,7 +2,7 @@ var countryFeature, pointFeature;
 
 var projection = d3.geo.azimuthal()
     .scale(380)
-    .origin([-71.03,42.37])
+    .origin([-71.03, 0])
     .mode("orthographic")
     .translate([640, 400]);
 
@@ -28,6 +28,8 @@ d3.json("/js/v/world-countries.json", function(collection) {
   countryFeature = countries.selectAll("path")
     .data(collection.features)
     .enter().append("svg:path")
+    .attr("id", function(d) { return d.id; })
+    .attr("class", "country")
     .attr("d", clip);
 
   countryFeature.append("svg:title")
@@ -81,3 +83,12 @@ function refresh() {
 function clip(d) {
   return path(circle.clip(d));
 }
+
+function rotate() {
+  var origin = projection.origin();
+  projection.origin([(origin[0] - 10) % 360, origin[1]]);
+  circle.origin(projection.origin());
+  refresh();
+}
+
+setInterval(rotate, 1000);
