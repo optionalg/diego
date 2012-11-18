@@ -1,5 +1,6 @@
 (ns diego.http
-  (:require [compojure.core :as compojure]
+  (:require [clojure.tools.logging :as log]
+            [compojure.core :as compojure]
             [compojure.route :as route]
             [aleph.http :as aleph]
             [aleph.formats :as formats]
@@ -33,4 +34,5 @@
   (compojure.route/not-found "message"))
 
 (defn start []
+  (log/info (str "Starting HTTP server on port " 8081))
   (aleph/start-http-server (aleph/wrap-ring-handler main-routes) {:port 8081}))
