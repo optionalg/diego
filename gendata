@@ -1,0 +1,6 @@
+#! /usr/bin/env ruby
+
+ARGV[0].to_i.times do
+  ip = (1..4).map {|_| rand(255).to_s}.join(".")
+  puts "xxx #{ip} #{Time.now.to_i}"
+end

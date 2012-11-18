@@ -13,5 +13,7 @@
     (do (log/warn "BUG! uninitialized GeoIP DB")
         {:latitude 0 :longitude 0})
     (let [location (.getLocation db ip-address)]
-      {:latitude (.latitude location)
-       :longitude (.longitude location)})))
+      (if (nil? location)
+        {:latitude 0 :longitude 0}
+        {:latitude (.latitude location)
+         :longitude (.longitude location)}))))

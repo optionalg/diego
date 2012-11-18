@@ -9,7 +9,8 @@
 .point {
   fill: steelblue;
   fill-opacity: .8;
-  stroke: #fff;
+  /* stroke: #fff; */
+  stroke: steelblue;
 }
 
 .country {

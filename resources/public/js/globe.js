@@ -11,7 +11,7 @@ var circle = d3.geo.greatCircle()
 
 var path = d3.geo.path()
     .projection(projection)
-    .pointRadius(5);
+    .pointRadius(2);
 
 var svg = d3.select("#globe").append("svg:svg")
     .attr("width", 1280)
