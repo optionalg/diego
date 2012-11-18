@@ -1,6 +1,7 @@
 (ns diego.plotting
   (:require [clojure.string :as s]
             [clojure.set :as cset]
+            [clojure.tools.logging :as log]
             [diego.geoip :as geoip]))
 
 (def ips-by-hour (atom {}))
@@ -21,8 +22,9 @@
 
 (defn store! [line]
   (let [[ip timestamp] (parse-line line)]
-    (if-not (nil? ip)
-      (swap! ips-by-hour store-location ip timestamp))))
+    (if (nil? ip)
+      (log/debug (str "dropping invalid input " line)
+      (swap! ips-by-hour store-location ip timestamp)))))
 
 (defn ip->point [db ip]
   (let [location (geoip/lookup-ip db ip)]
