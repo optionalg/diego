@@ -3,25 +3,26 @@
   (:require [diego.geoip :as geoip]))
 
 (deftest can-parse-line
+  (geoip/build-database! "GeoLiteCity.dat")
   (testing "parses key, ip, and timestamp"
-    (let [[ip timestamp] (parse-line "the.key 127.0.0.1 1353073467")]
-      (is (= "127.0.0.1" ip))
+    (let [[long-lat timestamp] (parse-line "the.key 98.101.166.2 1353073467")]
+      (is (= [(float -78.8326) (float 35.860107)] long-lat))
       (is (= 1353073467 timestamp))))
   (testing "parses with multiple spaces"
-    (let [[ip timestamp] (parse-line "the.key   127.0.0.1     1353073467")]
-      (is (= "127.0.0.1" ip))
+    (let [[long-lat timestamp] (parse-line "the.key   127.0.0.1     1353073467")]
+      (is (= [0 0] long-lat))
       (is (= 1353073467 timestamp))))
   (testing "junk results in nils"
-    (let [[ip timestamp] (parse-line "mary had a little lamb")]
-      (is (= nil ip))
+    (let [[long-lat timestamp] (parse-line "mary had a little lamb")]
+      (is (= [0 0] long-lat))
       (is (= nil timestamp))))
   (testing "timestamp needs to be good too"
-    (let [[ip timestamp] (parse-line "the.key 127.0.0.1 this is not a date")]
-      (is (= nil ip))
+    (let [[long-lat timestamp] (parse-line "the.key 127.0.0.1 this is not a date")]
+      (is (= [0 0] long-lat))
       (is (= nil timestamp))))
   (testing "empty lines result in nils"
-    (let [[ip timestamp] (parse-line "")]
-      (is (= nil ip))
+    (let [[long-lat timestamp] (parse-line "")]
+      (is (= [0 0] long-lat))
       (is (= nil timestamp)))))
 
 (deftest can-find-beginning-of-hour
@@ -42,25 +43,25 @@
       (is (= 24 (count (keys stored-locations)))))))
 
 (deftest store-mutates-state
+  (geoip/build-database! "GeoLiteCity.dat")
   (testing "accepts good lines"
-    (reset! ips-by-hour {})
-    (store! "foo 127.0.0.1 1353102243")
-    (is (= [#{"127.0.0.1"}] (vals @ips-by-hour))))
+    (reset! long-lats-by-hour {})
+    (store! "foo 98.101.166.2 1353102243")
+    (is (= [#{[(float -78.8326) (float 35.860107)]}] (vals @long-lats-by-hour))))
   (testing "drops bad lines"
-    (reset! ips-by-hour {})
+    (reset! long-lats-by-hour {})
     (store! "")
-    (is (= nil (vals @ips-by-hour)))))
+    (is (= nil (vals @long-lats-by-hour)))))
 
 (deftest can-generate-geo-json
-  (geoip/build-database! "GeoLiteCity.dat")
-  (testing "ip->point"
-    (let [point (ip->point @geoip/db "98.101.166.2")]
+  (testing "long-lat->point"
+    (let [point (long-lat->point [10 10])]
       (is (= {:type "Feature"
               :properties {}
               :geometry {:type "Point"
-                         :coordinates [(float -78.8326) (float 35.860107)]}}
+                         :coordinates [10 10]}}
              point))))
   (testing "ips->geo-json"
-    (let [points (ips->geo-json @geoip/db #{"98.101.166.2"})]
+    (let [points (long-lats->geo-json #{[10 10]})]
       (is (= "FeatureCollection" (:type points)))
       (is (not (empty? (:features points)))))))
