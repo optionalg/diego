@@ -6,8 +6,8 @@
 
 (def each-line-frame (gloss/string :utf-8 :delimiters ["\n"]))
 
-(defn start [line-handler]
-  (log/info (str "Starting data socket on port " 10000))
+(defn start [line-handler port]
+  (log/info "Starting data socket on port " port)
   (tcp/start-tcp-server
     (fn [ch client-info] (lamina/receive-all ch line-handler))
-    {:port 10000, :frame each-line-frame}))
+    {:port port, :frame each-line-frame}))

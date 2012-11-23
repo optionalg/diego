@@ -33,6 +33,6 @@
   (route/resources "/")
   (compojure.route/not-found "message"))
 
-(defn start []
-  (log/info (str "Starting HTTP server on port " 8081))
-  (aleph/start-http-server (aleph/wrap-ring-handler main-routes) {:port 8081}))
+(defn start [port]
+  (log/info "Starting HTTP server on port " port)
+  (aleph/start-http-server (aleph/wrap-ring-handler main-routes) {:port port}))
