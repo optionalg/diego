@@ -5,6 +5,7 @@
             [diego.geoip :as geoip]))
 
 (def long-lats-by-hour (atom {}))
+(def ^:dynamic *hours-to-keep* 24)
 
 (defn parse-line [line]
   (let [[_ ip timestamp] (s/split line #"\s+")]
@@ -18,7 +19,11 @@
   (- timestamp (mod timestamp 3600)))
 
 (defn store-location [locations long-lat timestamp]
-  (update-in locations [(beginning-of-hour timestamp)] cset/union #{long-lat}))
+  (let [new-locations (update-in locations [(beginning-of-hour timestamp)] cset/union #{long-lat})
+        ks (keys new-locations)]
+    (if (> (count ks) *hours-to-keep*)
+      (dissoc new-locations (first (sort ks)))
+      new-locations)))
 
 (defn store! [line]
   (try

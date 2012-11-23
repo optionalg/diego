@@ -39,7 +39,7 @@
     (is (= {1353099600 #{"1" "2"}}
            (store-location {1353099600 #{"1"}} "2" 1353102243))))
   (testing "only keeps 24 hours"
-      (let [stored-locations (reduce #(store-location %1 "2" (- 1353102243 (* %2 3600))) {} (range 1 25))]
+      (let [stored-locations (reduce #(store-location %1 "2" (- 1353102243 (* %2 3600))) {} (range 1 26))]
       (is (= 24 (count (keys stored-locations)))))))
 
 (deftest store-mutates-state
