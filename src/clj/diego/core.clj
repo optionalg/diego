@@ -19,5 +19,5 @@
       (println banner)
       (System/exit 1))
     (geoip/build-database! geoip-file)
-    (http/start (:http-port options))
-    (data-socket/start plotting/store! (:tcp-port options))))
+    (data-socket/start plotting/store! (:tcp-port options))
+    (http/start (:http-port options))))

@@ -34,6 +34,8 @@ d3.json("/js/v/world-countries.json", function(collection) {
 
   countryFeature.append("svg:title")
     .text(function(d) { return d.properties.name; });
+
+  rotate();
 });
 
 d3.json("/points", function(collection) {
@@ -77,7 +79,7 @@ function mouseup() {
 
 function refresh() {
   countryFeature.attr("d", clip);
-  pointFeature.attr("d", clip);
+  if (pointFeature) { pointFeature.attr("d", clip); }
 }
 
 function clip(d) {
@@ -85,10 +87,12 @@ function clip(d) {
 }
 
 function rotate() {
-  var origin = projection.origin();
-  projection.origin([(origin[0] - 10) % 360, origin[1]]);
-  circle.origin(projection.origin());
-  refresh();
+  d3.timer(function() {
+    var origin = projection.origin();
+    origin = [origin[0] - 0.18, origin[1]];
+    projection.origin(origin);
+    circle.origin(origin);
+    refresh();
+    return false;
+  });
 }
-
-setInterval(rotate, 1000);
