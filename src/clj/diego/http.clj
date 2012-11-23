@@ -2,7 +2,7 @@
   (:require [clojure.tools.logging :as log]
             [compojure.core :as compojure]
             [compojure.route :as route]
-            [aleph.http :as aleph]
+            [ring.adapter.jetty :as jetty]
             [aleph.formats :as formats]
             [diego.plotting :as plotting]))
 
@@ -35,4 +35,4 @@
 
 (defn start [port]
   (log/info "Starting HTTP server on port " port)
-  (aleph/start-http-server (aleph/wrap-ring-handler main-routes) {:port port}))
+  (jetty/run-jetty main-routes {:port port}))
