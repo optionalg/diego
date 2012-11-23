@@ -18,6 +18,15 @@ var svg = d3.select("#globe").append("svg:svg")
     .attr("height", 800)
     .on("mousedown", mousedown);
 
+var water_svg = svg.append("svg:g")
+    .attr("id", "water");
+
+var water = water_svg.append("svg:circle")
+  .attr("id", "water-circle")
+  .attr("cx", 640)
+  .attr("cy", 400)
+  .attr("r", 380);
+
 var countries = svg.append("svg:g")
     .attr("id", "countries");
 

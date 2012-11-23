@@ -1,15 +1,18 @@
-/* body { */
-/*   background-color: #111; */
-/* } */
+body {
+  background: url("/img/space-tile.jpg") repeat;
+}
 
 #countries {
   fill: blue;
 }
 
+#water {
+  fill: #3399FF;
+}
+
 .point {
   fill: steelblue;
   fill-opacity: .8;
-  /* stroke: #fff; */
   stroke: steelblue;
 }
 

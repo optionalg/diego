@@ -10,3 +10,4 @@ pom.xml
 .lein-plugins
 GeoLiteCity.dat
 TODO.md
+.DS_Store
