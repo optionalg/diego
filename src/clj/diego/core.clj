@@ -10,7 +10,8 @@
 (defn -main [& args]
   (let [[options [geoip-file] banner] (cli args
                                    ["-p" "--http-port" "HTTP port to listen upon" :parse-fn #(Integer. %) :default 8081]
-                                   ["-t" "--tcp-port" "TCP data port to listen upon" :parse-fn #(Integer. %) :default 10000])]
+                                   ["-t" "--tcp-port" "TCP data port to listen upon" :parse-fn #(Integer. %) :default 10000]
+                                   ["-s" "--custom-css" "Custom styles to be applied to the page" :default "/css/empty.css"])]
     (when (:help options)
       (println banner)
       (System/exit 0))
@@ -20,4 +21,5 @@
       (System/exit 1))
     (geoip/build-database! geoip-file)
     (data-socket/start plotting/store! (:tcp-port options))
-    (http/start (:http-port options))))
+    (binding [http/*custom-style* (:custom-css options)]
+      (http/start (:http-port options)))))

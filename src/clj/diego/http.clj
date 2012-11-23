@@ -7,13 +7,16 @@
             [hiccup.core :as hiccup]
             [diego.plotting :as plotting]))
 
+(def ^:dynamic *custom-style* "/css/empty.css")
+
 (defn index []
   {:status 200
    :headers {}
    :body (hiccup/html
            [:head
              [:title "Diego"]
-             [:link {:href "/css/main.css" :rel "stylesheet" :type "type/css"}]]
+             [:link {:href "/css/main.css" :rel "stylesheet" :type "type/css"}]
+             [:link {:href *custom-style* :rel "stylesheet" :type "type/css"}]]
            [:body
              [:div#globe]
              [:script {:src "/js/v/d3.v2.min.js" :type "text/javascript"}]
