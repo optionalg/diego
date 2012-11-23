@@ -4,23 +4,20 @@
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
             [aleph.formats :as formats]
+            [hiccup.core :as hiccup]
             [diego.plotting :as plotting]))
 
 (defn index []
   {:status 200
    :headers {}
-   :body
-  "<html>
-    <head>
-      <title>Hi there</title>
-      <link href='/css/main.css' rel='stylesheet' type='text/css' />
-    </head>
-    <body>
-      <div id='globe'></div>
-      <script src='/js/v/d3.v2.min.js' type='text/javascript'></script>
-      <script src='/js/globe.js' type='text/javascript'></script>
-    </body>
-  </html>"})
+   :body (hiccup/html
+           [:head
+             [:title "Diego"]
+             [:link {:href "/css/main.css" :rel "stylesheet" :type "type/css"}]]
+           [:body
+             [:div#globe]
+             [:script {:src "/js/v/d3.v2.min.js" :type "text/javascript"}]
+             [:script {:src "/js/globe.js" :type "text/javascript"}]])})
 
 (defn points []
   {:status 200
