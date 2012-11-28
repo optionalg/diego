@@ -6,6 +6,8 @@ A Clojure library designed to ... well, that part is up to you.
 
 FIXME
 
+Need a http://dev.maxmind.com/geoip/geolite
+
 ## License
 
 Copyright © 2012 FIXME
