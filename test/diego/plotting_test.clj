@@ -1,6 +1,5 @@
 (ns diego.plotting-test
-  (:use clojure.test diego.plotting)
-  (:require [diego.geoip :as geoip]))
+  (:use clojure.test diego.plotting))
 
 (deftest can-parse-line
   (build-geoip-database! "GeoLiteCity.dat")
