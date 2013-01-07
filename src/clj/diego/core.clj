@@ -1,6 +1,6 @@
 (ns diego.core
   (:use [clojure.tools.cli :only [cli]])
-  (:require [diego.geoip :as geoip]
+  (:require [contessa.core :as geoip]
             [diego.plotting :as plotting]
             [diego.http :as http]
             [diego.data-socket :as data-socket]))
@@ -19,7 +19,7 @@
       (println "Usage: diego [options] GEOIP_FILE")
       (println banner)
       (System/exit 1))
-    (geoip/build-database! geoip-file)
+    (plotting/build-geoip-database! geoip-file)
     (data-socket/start plotting/store! (:tcp-port options))
     (binding [http/*custom-style* (:custom-css options)]
       (http/start (:http-port options)))))

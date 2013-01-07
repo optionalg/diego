@@ -3,7 +3,7 @@
   (:require [diego.geoip :as geoip]))
 
 (deftest can-parse-line
-  (geoip/build-database! "GeoLiteCity.dat")
+  (build-geoip-database! "GeoLiteCity.dat")
   (testing "parses key, ip, and timestamp"
     (let [[long-lat timestamp] (parse-line "the.key 98.101.166.2 1353073467")]
       (is (= [(float -78.8326) (float 35.860107)] long-lat))
@@ -43,7 +43,7 @@
       (is (= 24 (count (keys stored-locations)))))))
 
 (deftest store-mutates-state
-  (geoip/build-database! "GeoLiteCity.dat")
+  (build-geoip-database! "GeoLiteCity.dat")
   (testing "accepts good lines"
     (reset! long-lats-by-hour {})
     (store! "foo 98.101.166.2 1353102243")

@@ -2,17 +2,26 @@
   (:require [clojure.string :as s]
             [clojure.set :as cset]
             [clojure.tools.logging :as log]
-            [diego.geoip :as geoip]))
+            [contessa.core :as geoip]))
+
+(def geoip-db (atom nil))
 
 (def long-lats-by-hour (atom {}))
+
 (def ^:dynamic *hours-to-keep* 24)
+
+(defn build-geoip-database! [file]
+  (reset! geoip-db (geoip/build-database file)))
 
 (defn parse-line [line]
   (let [[_ ip timestamp] (s/split line #"\s+")]
     (if (and (not (nil? ip))
              (re-matches #"\A[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\z" ip)
              (re-matches #"\A[0-9]+\z" timestamp))
-      [(map (geoip/lookup-ip @geoip/db ip) [:longitude :latitude])  (read-string timestamp)]
+      (let [location (geoip/lookup-ip @geoip-db ip)]
+        (if (= {} location)
+          [[0 0] (read-string timestamp)]
+          [(map location [:longitude :latitude]) (read-string timestamp)]))
       [[0 0] nil])))
 
 (defn beginning-of-hour [timestamp]
