@@ -1,5 +1,6 @@
 # diego
 
+[![Build Status](https://travis-ci.org/pitluga/diego.png?branch=master)](https://travis-ci.org/pitluga/diego)
 A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
